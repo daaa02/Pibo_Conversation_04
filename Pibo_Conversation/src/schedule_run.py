@@ -9,6 +9,7 @@ from datetime import datetime
 sys.path.append('/home/pi')
 from schedule_update import UpdateSchedule
 from Pibo_Package_04.Pibo_Conversation.data.text_to_speech import TextToSpeech, text_to_speech
+from Pibo_Package_04.Pibo_Conversation.drive_upload import drive_upload
 
 from openpibo.audio import Audio
 from openpibo.motion import Motion
@@ -119,15 +120,24 @@ class RunSchedule():
         if self.completion == 11:
             self.act = f'Pibo_Conversation/src/goodbye.py'           
         
-        folder = "/home/pi/UserData"
-        today = datetime.now().strftime('%m%d_%H%M')
-        # f = open(f'{folder}/{today}.txt','w')        
         # out = subprocess.check_output([f'python3 /home/pi/Pibo_Package_04/Pibo_Conversation/src/greeting.py'], shell=True, stderr=subprocess.STDOUT, encoding="utf-8")  
         
         try:
-            # out = subprocess.run([f'python3 {self.path}/{self.act}'], shell=True)
-            # subprocess.run([f'python3 {self.path}/{self.act}'], shell=True)
-            os.system(f'python3 {self.path}/{self.act}')
+            folder = "/home/pi/UserData"
+            logfile = f'(P04)_{datetime.now().strftime("%m%d_%H%M")}.txt'   #('P<PACKAGE_NUMBER>_DATE.txt')   
+            f = open(f'{folder}/{logfile}','w')
+            
+            # os.system(f'python3 {self.path}/{self.act}')
+            out = subprocess.check_output([f'python3 {self.path}/{self.act}'], shell=True, stderr=subprocess.STDOUT, encoding="utf-8")  
+            
+            f.write(out)
+            f.close()            
+            
+            try:
+                drive_upload(filepath=f'{folder}/{logfile}', filename=logfile)
+                
+            except Exception as e:
+                print(e)
             
             # 더 하고 싶다고 하면 여기서부터
             if self.completion >= 12:
