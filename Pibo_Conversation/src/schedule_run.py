@@ -54,7 +54,7 @@ class RunSchedule():
         if self.completion == 0:
             self.act = f'Pibo_Conversation/src/greeting.py'
             
-        if 1 <= self.completion <= 8 or self.completion >= 12:
+        if 1 <= self.completion <= 8:
             # 완료한 활동 개수가 짝수면 놀이, 홀수면 대화           
             fix = {1:'Pibo_Conversation/src/Fairytale/19_shepherd.py', 2:'Pibo_Conversation/src/Roleplay/02_strong.py',
                    3:'Pibo_Conversation/src/Solution/01_badword.py', 4:'Pibo_Play/src/Com/com_4.py', 5:'Pibo_Play/src/Soc/soc_6.py',
@@ -62,7 +62,7 @@ class RunSchedule():
             self.act = fix.get(self.completion)
         
         # 선호도 계산해서 활동 스케줄 결정(4일차~)
-        if self.completion >= 9:
+        if 9 <= self.completion <= 10 or self.completion >= 12:
             for i in range(0, len(data2)):              # 점수 값이 string 형태로 들어있어서 flaot로 변환
                 for j in range(0, 4):
                     data2[i][j] = float(data2[i][j])
